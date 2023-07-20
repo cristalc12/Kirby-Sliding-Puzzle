@@ -93,5 +93,5 @@ function dragEnd() {
         document.getElementById("turns").innerText = turns;
     }
 
-    button = document.getElementById("shuffle");
+    
 }
