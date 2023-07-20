@@ -1,0 +1,29 @@
+body {
+  text-align: center;
+  color: rgb(178, 178, 245);
+  background-color:darkslateblue;
+}
+
+#board {
+  
+  
+  width: 400px;
+  height: 400px;
+  background-color: lightblue;
+  border: 10px solid rgb(175, 175, 239);
+  /*centers board */
+  margin: 0 auto;
+  margin-top: 200px;
+  display: flex;
+  /* makes sure tiles go from left to right and fill up the width of board*/
+  flex-wrap: wrap;
+}
+
+#board img {
+  width: 96px;
+  height: 96px;
+  border: 1px solid black;
+  cursor: pointer;
+  border: 2px black solid;
+}
+
