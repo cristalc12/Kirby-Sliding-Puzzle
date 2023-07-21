@@ -1,125 +1,82 @@
-
 var rows = 4;
 var columns = 4;
-
-var currTile;
-var blankTile; //blank tile
-
+var blankTile;
 var turns = 0;
-
-// var imgOrder = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
-var imgOrder = ["4", "11", "8", "10", "1", "14", "7", "13", "3","5","2","15", "12","9","6","16"];
+var imgOrder = ["1", "5", "9", "13", "2", "6", "10", "14", "3","7","11","15", "4","8","12","16"];
 
 window.onload = function() {
-  
-
     for (let r=0; r < rows; r++) {
         for (let c=0; c < columns; c++) {
-
-            //<img id="0-0" src="1.jpg">
             let tile = document.createElement("img");
             tile.id = r.toString() + "-" + c.toString();
+            tile.className = 'normal';
             tile.src = imgOrder.shift() + ".jpg";
-
-            tile.addEventListener("mouseover", mouseOver);
-            tile.addEventListener("mouseout", mouseOut);
-
-            //DRAG FUNCTIONALITY
-            tile.addEventListener("dragstart", dragStart);  //click an image to drag
-            tile.addEventListener("dragover", dragOver);    //moving image around while clicked
-            tile.addEventListener("dragenter", dragEnter);  //dragging image onto another one
-            tile.addEventListener("dragleave", dragLeave);  //dragged image leaving anohter image
-            tile.addEventListener("drop", dragDrop);        //drag an image over another image, drop the image
-            tile.addEventListener("dragend", dragEnd);      //after drag drop, swap the two tiles
+            tile.addEventListener('click', function() { clickTile(r, c); });
+            tile.addEventListener('mouseover', function() { mouseOver(r, c, this); });
+            tile.addEventListener('mouseout', function() { mouseOut(this); });
 
             document.getElementById("board").append(tile);
-           
-            
 
+            // Set the blank tile
+            if(tile.src.includes("16.jpg")){
+                blankTile = {r: r, c: c};
+            }
         }
     }
+    document.getElementById("shuffle").addEventListener('click', shuffle);
 }
 
 
 
-function mouseOver() {
-    if (isAdjacentToBlankTile(this)) {
-        this.style.borderColor = "red";
+function mouseOver(row, col, tile) {
+    if (isAdjacentToBlankTile(row, col)) {
+        tile.className = 'movablepiece';
     }
 }
 
-function mouseOut() {
-    this.style.borderColor = "black";
+function mouseOut(tile) {
+    tile.className = 'normal';
 }
 
-function dragStart() {
-    currTile = this;
-    if (isAdjacentToBlankTile(currTile)) {
-        this.style.borderColor = "red";
-    }
-}
-
-function dragOver(e) {
-    e.preventDefault();
-}
-
-function dragEnter(e) {
-    e.preventDefault();
-}
-
-function dragLeave() {
-    currTile.style.borderColor = "black";
-}
-
-function dragDrop() {
-    blankTile = this;
-}
-
-function dragEnd() {
-    currTile.style.borderColor = "black";
-    if (!blankTile.src.includes("16.jpg")) {
-        return;
-    }
-
-    let currCoords = currTile.id.split("-");
-    let r = parseInt(currCoords[0]);
-    let c = parseInt(currCoords[1]);
-
-    let otherCoords = blankTile.id.split("-");
-    let r2 = parseInt(otherCoords[0]);
-    let c2 = parseInt(otherCoords[1]);
-
-    let moveLeft = r === r2 && c2 === c - 1;
-    let moveRight = r === r2 && c2 === c + 1;
-    let moveUp = c === c2 && r2 === r - 1;
-    let moveDown = c === c2 && r2 === r + 1;
-
-
-    if (isAdjacentToBlankTile(currCoords)) {
-        let currImg = currTile.src;
-        let otherImg = blankTile.src;
-
-        currTile.src = otherImg;
-        blankTile.src = currImg;
+function clickTile(row, col) {
+    if (isAdjacentToBlankTile(row, col)) {
+        swapTiles(row, col, blankTile.r, blankTile.c);
+        blankTile = {r: row, c: col};
 
         turns += 1;
         document.getElementById("turns").innerText = turns;
     }
 }
 
-function isAdjacentToBlankTile(tile) {
-    let currCoords = tile.id.split("-");
-    let r = parseInt(currCoords[0]);
-    let c = parseInt(currCoords[1]);
+function isAdjacentToBlankTile(row, col) {
+    return Math.abs(blankTile.r - row) + Math.abs(blankTile.c - col) === 1;
+}
 
-    let blankCoords = blankTile.id.split("-");
-    let r2 = parseInt(blankCoords[0]);
-    let c2 = parseInt(blankCoords[1]);
+function swapTiles(row1, col1, row2, col2) {
+    let tile1 = document.getElementById(row1 + "-" + col1);
+    let tile2 = document.getElementById(row2 + "-" + col2);
 
-    let moveLeft = r === r2 && c2 === c - 1;
-    let moveRight = r === r2 && c2 === c + 1;
-    let moveUp = c === c2 && r2 === r - 1;
-    let moveDown = c === c2 && r2 === r + 1;
+    let temp = tile1.src;
+    tile1.src = tile2.src;
+    tile2.src = temp;
+}
 
-    return moveLeft || moveRight || moveUp || moveDown;
+function shuffle() {
+    for (let i = 0; i < 1000; i++) {
+        let neighbors = getBlankTileNeighbors();
+        let randomTile = neighbors[Math.floor(Math.random() * neighbors.length)];
+        swapTiles(blankTile.r, blankTile.c, randomTile.r, randomTile.c);
+        blankTile = randomTile;
+    }
+    turns = 0;
+    document.getElementById("turns").innerText = turns;
+}
+
+function getBlankTileNeighbors() {
+    let neighbors = [];
+    if (blankTile.r > 0) neighbors.push({r: blankTile.r - 1, c: blankTile.c});
+    if (blankTile.r < rows - 1) neighbors.push({r: blankTile.r + 1, c: blankTile.c});
+    if (blankTile.c > 0) neighbors.push({r: blankTile.r, c: blankTile.c - 1});
+    if (blankTile.c < columns - 1) neighbors.push({r: blankTile.r, c: blankTile.c + 1});
+    return neighbors;
 }
