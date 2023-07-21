@@ -2,7 +2,7 @@ var rows = 4;
 var columns = 4;
 var blankTile;
 var turns = 0;
-var imgOrder = ["1", "5", "9", "13", "2", "6", "10", "14", "3","7","11","15", "4","8","12","16"];
+var imgOrder = ["1", "2", "3", "4", "5", "6", "7", "8", "9","10","11","12", "13","14","15","16"];
 
 window.onload = function() {
     for (let r=0; r < rows; r++) {
@@ -38,6 +38,21 @@ function mouseOut(tile) {
     tile.className = 'normal';
 }
 
+function isSolved() {
+    let tiles = document.getElementById('board').children;
+    for (let i = 0; i < tiles.length; i++) {
+        let tile = tiles[i];
+        let coords = tile.id.split('-');
+        let r = parseInt(coords[0]);
+        let c = parseInt(coords[1]);
+        let correctImgNumber = r * columns + c + 1;
+        if (!tile.src.includes(correctImgNumber + '.jpg')) {
+            return false;
+        }
+    }
+    return true;
+}
+
 function clickTile(row, col) {
     if (isAdjacentToBlankTile(row, col)) {
         swapTiles(row, col, blankTile.r, blankTile.c);
@@ -45,8 +60,22 @@ function clickTile(row, col) {
 
         turns += 1;
         document.getElementById("turns").innerText = turns;
+
+        if (isSolved()) {
+            document.getElementById('board').style.backgroundColor = 'lightgreen';
+            let winMessage = document.createElement('h2');
+            winMessage.innerText = 'Congratulations! You have solved the puzzle!';
+            document.body.appendChild(winMessage);
+
+            // Add your code here
+            let winImage = document.createElement('img');
+            winImage.src = 'https://tenor.com/view/congratulations-gif-24669440.gif';
+            document.body.appendChild(winImage);
+        }
     }
 }
+
+
 
 function isAdjacentToBlankTile(row, col) {
     return Math.abs(blankTile.r - row) + Math.abs(blankTile.c - col) === 1;
@@ -80,3 +109,4 @@ function getBlankTileNeighbors() {
     if (blankTile.c < columns - 1) neighbors.push({r: blankTile.r, c: blankTile.c + 1});
     return neighbors;
 }
+
