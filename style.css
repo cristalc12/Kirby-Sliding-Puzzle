@@ -27,3 +27,6 @@ body {
   border: 2px black solid;
 }
 
+#board img.unmovable {
+  border: 2px solid red;
+}
