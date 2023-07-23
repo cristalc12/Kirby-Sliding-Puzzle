@@ -4,10 +4,10 @@ var blankTile;
 var turns = 0;
 var imgOrder = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"];
 var backgrounds = [
-    'https://images4.alphacoders.com/130/1305893.jpeg',
-    'https://images5.alphacoders.com/127/1279262.jpg',
-    'https://images3.alphacoders.com/127/1279635.jpg',
-    'https://images7.alphacoders.com/127/1279291.jpg',
+    '124.jpg',
+    '125.jpg',
+    '126.jpg',
+    '127.jpg',
 ];
 
 
@@ -95,7 +95,7 @@ function clickTile(row, col) {
 
 
             let winImage = document.createElement('img');
-            winImage.src = 'https://tenor.com/view/congratulations-gif-24669440.gif';
+            winImage.src = 'congratulations.gif';
             document.body.appendChild(winImage);
         }
     } else {
@@ -120,15 +120,23 @@ function swapTiles(row1, col1, row2, col2) {
     tile2.src = temp;
 }
 
-function shuffle() {
+async function shuffle() {
     for (let i = 0; i < 1000; i++) {
         let neighbors = getBlankTileNeighbors();
         let randomTile = neighbors[Math.floor(Math.random() * neighbors.length)];
+
+        // Delay the tile swap to add animation
+        await sleep(10); // You can adjust the delay time (in milliseconds) to control the animation speed
+
         swapTiles(blankTile.r, blankTile.c, randomTile.r, randomTile.c);
         blankTile = randomTile;
     }
     turns = 0;
     document.getElementById("turns").innerText = turns;
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function getBlankTileNeighbors() {
