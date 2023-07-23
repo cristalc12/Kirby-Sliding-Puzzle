@@ -12,7 +12,8 @@ var backgrounds = [
 
 
 
-
+let startTime = 0;
+let timerInterval;
 
 window.onload = function () {
     for (let r = 0; r < rows; r++) {
@@ -35,7 +36,11 @@ window.onload = function () {
             }
         }
     }
-    document.getElementById("shuffle").addEventListener('click', shuffle);
+    // Add event listener for the Shuffle button
+  document.getElementById("shuffle").addEventListener('click', function() {
+    shuffle();
+    startTimer();
+  });
     let randomIndex = Math.floor(Math.random() * backgrounds.length);
     document.body.style.backgroundImage = "url('" + backgrounds[randomIndex] + "')";
 
@@ -43,11 +48,9 @@ window.onload = function () {
     document.getElementById("backgrounds").addEventListener('change', function() {
         let selectedBackground = this.value;
         document.body.style.backgroundImage = "url('" + backgrounds[selectedBackground] + "')";
-
-
-    });
+     });
     
-    document.getElementById("shuffle").addEventListener('click', shuffle);
+   
 }
 
 
@@ -120,19 +123,37 @@ function swapTiles(row1, col1, row2, col2) {
     tile2.src = temp;
 }
 
+function startTimer() {
+    startTime = Date.now();
+    timerInterval = setInterval(updateTimer, 1000);
+  }
+  
+function updateTimer() {
+    const currentTime = Date.now();
+    const elapsedTime = currentTime - startTime;
+    const seconds = Math.floor(elapsedTime / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const formattedTime = `${minutes.toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`;
+    document.getElementById('timer').innerText = formattedTime;
+
+    if (isSolved()) {
+        clearInterval(timerInterval); // Stop the timer
+      }
+  }
+
 async function shuffle() {
+    turns = 0;
+    document.getElementById("turns").innerText = turns;
     for (let i = 0; i < 1000; i++) {
         let neighbors = getBlankTileNeighbors();
         let randomTile = neighbors[Math.floor(Math.random() * neighbors.length)];
 
         // Delay the tile swap to add animation
-        await sleep(10); // You can adjust the delay time (in milliseconds) to control the animation speed
-
+        await sleep(10);
         swapTiles(blankTile.r, blankTile.c, randomTile.r, randomTile.c);
         blankTile = randomTile;
     }
-    turns = 0;
-    document.getElementById("turns").innerText = turns;
+
 }
 
 function sleep(ms) {
@@ -147,4 +168,6 @@ function getBlankTileNeighbors() {
     if (blankTile.c < columns - 1) neighbors.push({ r: blankTile.r, c: blankTile.c + 1 });
     return neighbors;
 }
+
+
 
