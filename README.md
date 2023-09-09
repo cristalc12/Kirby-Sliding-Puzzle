@@ -2,13 +2,11 @@ Kirby Themed Sliding Puzzle
 
 Project for Summer CSC 4370 Web Programming Development
 
-A simple classic game consisting of a 4x4 grid of numbered squares with one square missing. The objective of the game is to to arrange the tiles into their numerical order by repeatedly a square that is adjacent to the missing square into its empty space
+A simple classic game consisting of a 4x4 grid of numbered squares with one square missing. The objective of the game is to to arrange the tiles into their correct order by picking one square at a time that is adjacent to the blank spot and moving into it. 
 
-Requirements included: Shuffle Button, Moveable squares with a hover style of a red border(otherwise black), Pointer mouse cursor, O(n) shuffle algorithm, Animation
+Requirements included: Shuffle Button, moveable squares have a hover style of a red border (otherwise black), pointer mouse cursor, O(n) shuffle algorithm, animation of the swapping of sqaures 
 
-Extra features:
-
-Music, Timer, Turn Counter, Timer, End-of-game notification, Different background images
+Extra features: Music, timer, turn Counter, end-of-game notification, different web page background images
 
 
 ![firefox_zyL4kadnvk](https://github.com/Kmccoy15/slidepuzzle/assets/105386097/2c32012c-bd09-490a-a165-73bf2e0779e6)
