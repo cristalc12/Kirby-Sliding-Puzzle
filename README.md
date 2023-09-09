@@ -1,6 +1,6 @@
-#Kirby Themed Sliding Puzzle
+# Kirby Themed Sliding Puzzle
 
-##Project for Summer CSC 4370 Web Programming Development
+## Project for Summer CSC 4370 Web Programming Development
 
 A simple classic game consisting of a 4x4 grid of numbered squares with one square missing. The objective of the game is to to arrange the tiles into their correct order by picking one square at a time that is adjacent to the blank spot and moving into it. 
 
